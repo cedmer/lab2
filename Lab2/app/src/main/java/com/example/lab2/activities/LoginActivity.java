@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                                  InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                                  String s = readStream(in);
                                  Log.i("JFL", s);
-                                 result.setText(s);
+                                 setRes(s);
                              } finally {
                                  urlConnection.disconnect();
                              }
@@ -91,5 +91,15 @@ public class LoginActivity extends AppCompatActivity {
         } catch (IOException e) {
             return "";
         }
+    }
+
+    public void setRes(String s){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView result = findViewById(R.id.textviewresult);
+                result.setText(s);
+            }
+        });
     }
 }
