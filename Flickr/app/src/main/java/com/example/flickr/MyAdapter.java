@@ -40,7 +40,7 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // ConvertView qui permet d'afficher tous les urls sur l'écran
+        // ConvertView which allows to display all the urls on the screen
 //        if (convertView == null) {
 //            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 //            convertView = inflater.inflate(R.layout.textviewlayout, parent, false);
@@ -51,19 +51,19 @@ public class MyAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.bitmap_layout, parent, false);
         }
 
-        // Cré&ation de l'imageView afin de pouvoir l'utiliser dans la lambda expression. Si instanciée dans la lambda exp, ça ne fonctionne pas.
+        //Creation of the imageView so that it can be used in the lambda expression. If instantiated in lambda exp, it doesn't work.
         ImageView img = (ImageView)convertView.findViewById(R.id.imageView);
 
-        // Création d'un bitmap pour permettre de charger l'image
+        // Create a bitmap to load the image
         Response.Listener<Bitmap> rep_listener = response -> {
             img.setImageBitmap(response);
         };
 
-        // On crée une imageRequest contenant la position de l'url de l'image dasn le vector et une création de bitmap avec els response listener
+
+        // We create an imageRequest containing the position of the image url in the vector and a bitmap creation with the response listener
         ImageRequest request = new ImageRequest(vector.get(position), rep_listener,  0, 0, ImageView.ScaleType.CENTER_CROP, null, null);
 
-
-        // On ajoute au singleton (qui est un genre de liste chainée) les information de l'image que l'oin cherche à charger.
+        // We add to the singleton (which is a kind of chain list) the information of the image that we are trying to load.
         MySingleton.getInstance(parent.getContext()).addToRequestQueue(request);
 
         return convertView;
