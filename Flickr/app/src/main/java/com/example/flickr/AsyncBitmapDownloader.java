@@ -19,24 +19,24 @@ import java.net.URL;
 public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
 
     @Override
-    protected Bitmap doInBackground(String... strings) {
+    protected Bitmap doInBackground(String... strings) { //Perform the HTTP connection, and reinstantiate the JSON object
         URL url = null;
         HttpURLConnection urlConnection = null;
         Bitmap bm = null;
         try {
             url = new URL(strings[0]);
-            urlConnection = (HttpURLConnection) url.openConnection(); // Open
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream()); // Stream
-            bm = BitmapFactory.decodeStream(in);
-            in.close();
+            urlConnection = (HttpURLConnection) url.openConnection(); //Open the connection using the url
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream()); //Get the content of the urlConnection
+            bm = BitmapFactory.decodeStream(in); //decode the input stream to a bitmap format
+            in.close(); //Close the input stream so we free resources
         }
         catch (MalformedURLException e) { e.printStackTrace(); }
         catch (IOException e) {
             e.printStackTrace();
         }
-        finally {
+        finally {   //the code inside will be done anyway
             if (urlConnection != null)
-                urlConnection.disconnect();
+                urlConnection.disconnect(); //Close the urlConnection
         }
         return bm;
     }
@@ -44,7 +44,7 @@ public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         Log.i("CIO", "Image received !");
-        MainActivity.bm = bitmap;
+        MainActivity.bm = bitmap; // set the public bitmap value locate in the main activity
     }
 
 }

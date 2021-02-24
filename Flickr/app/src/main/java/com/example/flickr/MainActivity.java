@@ -32,14 +32,11 @@ public class MainActivity extends AppCompatActivity {
         Button btnimage = findViewById(R.id.btnImage);
         Button btnlist = findViewById(R.id.btnlist);
 
-
-
-
         btnimage.setOnClickListener(new GetImageOnClickListener(){
             @Override
             public void onClick(View v) {
                 super.onClick(v);
-                setRes(bm);
+                setRes(bm);//Once we get the image in the bitmap, we display it
             }
         });
 

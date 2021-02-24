@@ -24,34 +24,37 @@ import java.net.URL;
 public class AsyncFlickrJSONData extends AsyncTask<String, Void, JSONObject> {
 
     private AppCompatActivity myActivity;
-    private String httpUrl;
 
-    public AsyncFlickrJSONData(String httpUrl) {
-        this.httpUrl = httpUrl;
+    public AsyncFlickrJSONData() {
+
     }
 
-    protected JSONObject doInBackground(String... strings) {
+    protected JSONObject doInBackground(String... httpUrl) {
         URL url =null;
         JSONObject myJSONObject = null;
-        try {
-            url = new URL(this.httpUrl);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        for(int i=0; i<httpUrl.length;i++){ //to get all url
             try {
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                String s = readStream(in);
-                Log.i("JFL", s);
-                myJSONObject = new JSONObject(s);
-            } catch (JSONException e) {
+                url = new URL(httpUrl[i]); //get the i url
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();//Open the connection using the url
+                try {
+                    InputStream in = new BufferedInputStream(urlConnection.getInputStream());  //Get the content of the urlConnection
+                    String s = readStream(in);//Read this content as a string
+                    Log.i("JFL", s);
+                    myJSONObject = new JSONObject(s);//Create a JSON Object with the string we just translate
+                    in.close(); //Close the input stream so we free resources
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    urlConnection.disconnect();
+                }
+            }
+            catch (MalformedURLException e) {
                 e.printStackTrace();
-            } finally {
-                urlConnection.disconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
         return myJSONObject;
     }
@@ -59,7 +62,7 @@ public class AsyncFlickrJSONData extends AsyncTask<String, Void, JSONObject> {
 
 
 
-        protected void onPostExecute(JSONObject s) {
+        protected void onPostExecute(JSONObject s) {//Log the obtained JSON object in Logcat
             try {
                 JSONArray items = null;
                 try {
@@ -68,12 +71,11 @@ public class AsyncFlickrJSONData extends AsyncTask<String, Void, JSONObject> {
                     e.printStackTrace();
                 }
 
-                    JSONObject flickr_entry = items.getJSONObject(0);
-                    String title = flickr_entry.getString("title");
-                    String urlmedia = flickr_entry.getJSONObject("media").getString("m");
+                    JSONObject flickr_entry = items.getJSONObject(0);//get the first item
+                    String urlmedia = flickr_entry.getJSONObject("media").getString("m");//get the item name : media
                     Log.i("CIO", "URL media: " + urlmedia);
 
-                    AsyncBitmapDownloader abd = new AsyncBitmapDownloader();
+                    AsyncBitmapDownloader abd = new AsyncBitmapDownloader();//Prepare the bitmap downloader
                     abd.execute(urlmedia);
 
             } catch (JSONException e) {
@@ -90,7 +92,7 @@ public class AsyncFlickrJSONData extends AsyncTask<String, Void, JSONObject> {
                 bo.write(i);
                 i = is.read();
             }
-            return bo.toString().replace("jsonFlickrFeed(","");
+            return bo.toString().replace("jsonFlickrFeed(",""); // use replace to remove the begining
         } catch (IOException e) {
             return "";
         }

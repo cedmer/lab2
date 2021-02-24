@@ -28,7 +28,7 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
         ListView list = findViewById(R.id.list);
-        adapter = new MyAdapter();
+        adapter = new MyAdapter();//set a MyAdapter()  to display the images in imageView
         list.setAdapter(adapter);
 
         AsyncFlickrJSONDataForList task = new AsyncFlickrJSONDataForList(adapter,"https://www.flickr.com/services/feeds/photos_public.gne?tags=trees&format=json");

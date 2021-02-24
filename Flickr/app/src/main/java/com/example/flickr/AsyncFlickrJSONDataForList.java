@@ -34,12 +34,13 @@ public class AsyncFlickrJSONDataForList extends AsyncTask<String, Void, JSONObje
         JSONObject myJSONObject = null;
         try {
             url = new URL(httpUrl);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();//Open the connection using the url
             try {
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                String s = readStream(in);
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());//Get the content of the urlConnection
+                String s = readStream(in);//Read this content as a string
                 Log.i("JFL", s);
-                myJSONObject = new JSONObject(s);
+                myJSONObject = new JSONObject(s);//Create a JSON Object with the string we just translate
+                in.close(); //Close the input stream so we free resources
             } catch (JSONException e) {
                 e.printStackTrace();
             } finally {
@@ -61,13 +62,13 @@ public class AsyncFlickrJSONDataForList extends AsyncTask<String, Void, JSONObje
     protected void onPostExecute(JSONObject s) {
         try {
             JSONArray items = s.getJSONArray("items");
-            for (int i = 0; i<items.length(); i++)
+            for (int i = 0; i<items.length(); i++)//in order to get all the item
             {
-                JSONObject flickr_entry = items.getJSONObject(i);
-                String urlmedia = flickr_entry.getJSONObject("media").getString("m");
+                JSONObject flickr_entry = items.getJSONObject(i);//get the i item
+                String urlmedia = flickr_entry.getJSONObject("media").getString("m");//get the item name : media
                 Log.i("CIO", "URL media: " + urlmedia);
 
-                myadapter.dd(urlmedia);
+                myadapter.dd(urlmedia);// add it to Myadapter()
 
             }
             myadapter.notifyDataSetChanged();
@@ -86,7 +87,7 @@ public class AsyncFlickrJSONDataForList extends AsyncTask<String, Void, JSONObje
                 bo.write(i);
                 i = is.read();
             }
-            return bo.toString().replace("jsonFlickrFeed(","");
+            return bo.toString().replace("jsonFlickrFeed(","");// use replace to remove the begining
         } catch (IOException e) {
             return "";
         }
