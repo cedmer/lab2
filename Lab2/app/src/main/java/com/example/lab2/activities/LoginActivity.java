@@ -50,19 +50,19 @@ public class LoginActivity extends AppCompatActivity {
                          URL url = null;
                          try {
                              url = new URL("https://httpbin.org/basic-auth/bob/sympa");
-                             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                             String infos = textFieldLogin.getText().toString()+":"+textFieldPassword.getText().toString();
+                             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();//Open the connection using the url
+                             String infos = textFieldLogin.getText().toString()+":"+textFieldPassword.getText().toString();//add to string the input of the user
                              String basicAuth = "Basic " + Base64.encodeToString(infos.getBytes(),
-                                     Base64.NO_WRAP);
+                                     Base64.NO_WRAP);//convert to base 64 the string
                              urlConnection.setRequestProperty ("Authorization", basicAuth);
 
                              try {
-                                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());//Get the content of the urlConnection
                                  String s = readStream(in);
                                  Log.i("JFL", s);
-                                 setRes(s);
-                             } finally {
-                                 urlConnection.disconnect();
+                                 setRes(s); //Once we get the image in the bitmap, we display it
+                             } finally {//the code inside will be done anyway
+                                 urlConnection.disconnect();//Close the urlConnection
                              }
                          } catch (MalformedURLException e) {
                              e.printStackTrace();
